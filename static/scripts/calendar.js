@@ -55,8 +55,8 @@ class Cal {
         html += '</tr></thead>';
         // Write the header of the days of the week
         html += '<tr class="days">';
-        for (var i = 0; i < this.DaysOfWeek.length; i++) {
-            html += '<td>' + this.DaysOfWeek[i] + '</td>';
+        for (var i in this.DaysOfWeek) {
+            html += '<td>' + i + '</td>';
         }
         html += '</tr>';
         // Write the days
