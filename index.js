@@ -14,7 +14,13 @@ app.get("/static", (req, res) => {
 
 app.get("/styles", (req, res) => {
     res.sendFile(path.resolve("/styles/calendar.css"));
-})
+});
+
+app.get("/events", (req, res) => {
+    //Connect to database, take out event info and write the file "events.json".
+    //In this example, we are first going to provide only the already written file.
+    res.sendFile(path.resolve("events.json"));
+});
 
 var port = 3000;
 
