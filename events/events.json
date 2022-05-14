@@ -1,0 +1,22 @@
+{
+    "listForCategory": [
+        {
+            "fauna": [
+                {
+                    "name": "Evento 1"
+                },
+                {
+                    "name": "Evento 2"
+                }
+            ],
+            "spettacolo": [
+                {
+                    "name": "Vasco Rossi on tour"
+                },
+                {
+                    "name": "Vasco Rossi on tour"
+                }
+            ]
+        }
+    ]
+}
