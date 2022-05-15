@@ -7,7 +7,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/", express.static("static"));
 
 var events = require("./events.js");
-app.use("/events", events);
+app.use("/api/v1/events", events);
 
 app.get("/", (req, res) => {
     res.sendFile(path.resolve("./index.html"));

@@ -20,6 +20,6 @@ var request = () => {
         }
     };
 
-    reqObj.open("GET", "http://localhost:3000/events", true);
+    reqObj.open("GET", "http://localhost:3000/api/v1/events", true);
     reqObj.send();
 };
