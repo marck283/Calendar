@@ -3,7 +3,7 @@ class Cal {
         //Store div id
         this.divId = divId;
         // Days of week, starting on Sunday
-        this.DaysOfWeek = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'];
+        this.DaysOfWeek = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
         // Months, stating on January
         this.Months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio',
             'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
@@ -55,7 +55,7 @@ class Cal {
         html += '</tr></thead>';
         // Write the header of the days of the week
         html += '<tr class="days">';
-        for (var i in this.DaysOfWeek) {
+        for (var i of this.DaysOfWeek) {
             html += '<td>' + i + '</td>';
         }
         html += '</tr>';
@@ -68,14 +68,13 @@ class Cal {
                 html += '<tr>';
             }
 
-
             // If not Sunday but first day of the month
             // it will write the last days from the previous month
             else if (i == 1) {
                 html += '<tr>';
                 var k = lastDayOfLastMonth - firstDayOfMonth + 1;
                 for (var j = 0; j < firstDayOfMonth; j++) {
-                    html += '<td class="not-current">' + k + '</td>';
+                    html += '<td class="not-current"><a href="#" onclick="myPopup();">' + k + '</a></td>';
                     k++;
                 }
             }
@@ -84,9 +83,9 @@ class Cal {
             var chkY = chk.getFullYear();
             var chkM = chk.getMonth();
             if (chkY == this.currYear && chkM == this.currMonth && i == this.currDay) {
-                html += '<td class="today">' + i + '</td>';
+                html += '<td class="today"><a href="#" onclick="myPopup();">' + i + '</a></td>';
             } else {
-                html += '<td class="normal">' + i + '</td>';
+                html += '<td class="normal"><a href="#" onclick="myPopup();">' + i + '</a></td>';
             }
             // If Saturday, closes the row
             if (dow == 6) {
@@ -99,7 +98,7 @@ class Cal {
             else if (i == lastDateOfMonth) {
                 var k = 1;
                 for (dow; dow < 6; dow++) {
-                    html += '<td class="not-current">' + k + '</td>';
+                    html += '<td class="not-current"><a href="#" onclick="myPopup();">' + k + '</a></td>';
                     k++;
                 }
             }
@@ -127,4 +126,10 @@ class Cal {
   // Get element by id
   function getId(id) {
     return document.getElementById(id);
+  }
+
+  function myPopup() {
+      var popup = document.getElementById("myPopup");
+      popup.innerHTML = "<a href=\"#\">1</a>";
+      popup.classList.toggle("show");
   }

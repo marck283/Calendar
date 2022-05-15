@@ -10,8 +10,10 @@ var request = async () => {
                 for (var item of f.events) {
                     document.getElementById(f.category).innerHTML += "<div class=\"col\"><div class=\"card\">\
                     <h5 class=\"card-title\">" + item.name + "</h5>\
-                    <p class=\"card-body\">" + item.description + "</p>\
-                    <a href=\"#\" class=\"btn btn-primary\" name=\"cardButton\">Maggiori informazioni...</a></div></div>";
+                    <a href=\"#?id=" + item.id + "\" class=\"btn btn-primary\" name=\"cardButton\">Maggiori informazioni...</a></div></div>";
+                    //Si ricordi che, nel link associato al bottone di cui sopra, dovrà essere inserito anche l'id dell'evento
+                    //come parametro di query. Questo id dovrà essere cercato, una volta che Enrico avrà creato la sua pagina di
+                    //visualizzazione di un evento pubblico, tramite il campo opportuno contenuto nel file JSON ricevuto dal client.
                 }
                 document.getElementById("eventLists").innerHTML += "</div></li></ul>";
             }

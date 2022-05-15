@@ -4,10 +4,12 @@
             "category": "Fauna",
             "events": [
                 {
+                    "id": "1234eda43",
                     "name": "Evento 1",
                     "description": "Descrizione evento 1"
                 },
                 {
+                    "id": "1234eda44",
                     "name": "Evento 2",
                     "description": "Descrizione evento 2"
                 }
@@ -17,12 +19,14 @@
             "category": "Spettacolo",
             "events": [
                 {
+                    "id": "1234eda45",
                     "name": "Vasco Rossi on tour",
-                    "description": "Decrizione evento Vasco Rossi on tour"
+                    "description": "Descrizione evento Vasco Rossi on tour"
                 },
                 {
+                    "id": "1234eda46",
                     "name": "Vasco Rossi on tour",
-                    "description": "Decrizione evento Vasco Rossi on tour"
+                    "description": "Descrizione evento Vasco Rossi on tour"
                 }
             ]
         }
