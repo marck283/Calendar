@@ -9,7 +9,7 @@ app.use("/", express.static("static"));
 var events = require("./events.js");
 app.use("/api/v1/events", events);
 
-app.get("/", (req, res) => {
+app.get("/static", (req, res) => {
     res.sendFile(path.resolve("./index.html"));
 });
 
