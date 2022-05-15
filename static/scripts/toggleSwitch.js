@@ -1,11 +1,9 @@
-var request = () => {
-    var reqObj = new XMLHttpRequest(), eventJSONList;
-    reqObj.responseType = "json";
-    reqObj.onreadystatechange = function () {
-        if (this.readyState === 4 && this.status === 200) {
-            //Popola la pagina con i dati ricevuti
-            eventJSONList = this.response; //Cattura la risposta in formato JSON
-            for (var f of eventJSONList.listForCategory) {
+var request = async () => {
+    try {
+        const response = await fetch("/api/v1/events");
+        if(response.ok) {
+            const jsonResponse = await response.json();
+            for (var f of jsonResponse.listForCategory) {
                 document.getElementById("eventLists").innerHTML += "<h3>" + f.category + "</h3>\
                 <ul class=\"list-group list-group-flush\"><li class=\"list-group-item\"><div class=\"row row-cols-4\"\
                 id=\"" + f.category + "\">";
@@ -18,11 +16,10 @@ var request = () => {
                 document.getElementById("eventLists").innerHTML += "</div></li></ul>";
             }
         }
-    };
-
-    reqObj.open("GET", "/api/v1/events", true); //Invio una richiesta asincrona al server Node.js
-    reqObj.send();
-};
+    } catch(error) {
+        console.log(error);
+    }
+}
 
 var showIfChecked = () => {
     if (document.getElementById("buttonSwitch").checked) {
