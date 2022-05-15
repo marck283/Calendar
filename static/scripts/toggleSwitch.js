@@ -5,12 +5,13 @@ var request = () => {
         if (this.readyState === 4 && this.status === 200) {
             //Popola la pagina con i dati ricevuti
             eventJSONList = this.response; //Cattura la risposta in formato JSON
-            for (var f = 0; f < eventJSONList.listForCategory.length; f++) {
-                document.getElementById("eventLists").innerHTML += "<h3>" + eventJSONList.listForCategory[f].category + "</h3>\
-                <ul class=\"list-group list-group-flush\"><li class=\"list-group-item\"><div class=\"row row-cols-4\">";
-                for (var item of eventJSONList.listForCategory[f].events) {
-                    document.getElementById("eventLists").innerHTML += "<div class=\"col\"><div class=\"card\">\
-                    <h5 class=\"card-body\"><h5 class=\"card-title\">" + item.name + "</h5>\
+            for (var f of eventJSONList.listForCategory) {
+                document.getElementById("eventLists").innerHTML += "<h3>" + f.category + "</h3>\
+                <ul class=\"list-group list-group-flush\"><li class=\"list-group-item\"><div class=\"row row-cols-4\"\
+                id=\"" + f.category + "\">";
+                for (var item of f.events) {
+                    document.getElementById(f.category).innerHTML += "<div class=\"col\"><div class=\"card\">\
+                    <h5 class=\"card-title\">" + item.name + "</h5>\
                     <p class=\"card-body\">" + item.description + "</p>\
                     <a href=\"#\" class=\"btn btn-primary\" name=\"cardButton\">Maggiori informazioni...</a></div></div>";
                 }
@@ -28,6 +29,7 @@ var showIfChecked = () => {
         document.getElementById("calendarWrapper").style.display = "block";
         document.getElementById("divCal").style.display = "block";
         document.getElementById("eventLists").style.display = "none";
+        document.getElementById("eventLists").innerHTML = "";
     } else {
         request();
         document.getElementById("calendarWrapper").style.display = "none";

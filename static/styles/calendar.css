@@ -1,14 +1,5 @@
-.container {
-    min-width: 80% !important;
-    max-width: 80% !important;
-}
-
-h1, h3 {
+h1 {
     padding: 1.2rem;
-    text-align: center;
-}
-
-h5 {
     text-align: center;
 }
 
