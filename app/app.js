@@ -10,11 +10,11 @@ var events = require("./events.js");
 app.use("/api/v1/events", events);
 
 app.get("/static", (req, res) => {
-    res.sendFile(path.resolve("./index.html"));
+    res.status(200).sendFile(path.resolve("./index.html"));
 });
 
 app.get("/styles", (req, res) => {
-    res.sendFile(path.resolve("/styles/calendar.css"));
+    res.status(200).sendFile(path.resolve("/styles/calendar.css"));
 });
 
 module.exports = app;

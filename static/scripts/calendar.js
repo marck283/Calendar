@@ -74,7 +74,7 @@ class Cal {
                 html += '<tr>';
                 var k = lastDayOfLastMonth - firstDayOfMonth + 1;
                 for (var j = 0; j < firstDayOfMonth; j++) {
-                    html += '<td class="not-current"><a href="#" onclick="myPopup();">' + k + '</a></td>';
+                    html += '<td class="not-current"><a href="#" onclick="myPopup(' +  + m + "/" + i + "/" + y + ');">' + k + '</a></td>';
                     k++;
                 }
             }
@@ -83,9 +83,9 @@ class Cal {
             var chkY = chk.getFullYear();
             var chkM = chk.getMonth();
             if (chkY == this.currYear && chkM == this.currMonth && i == this.currDay) {
-                html += '<td class="today"><a href="#" onclick="myPopup();">' + i + '</a></td>';
+                html += '<td class="today"><a href="#" onclick="myPopup(' +  + m + "/" + i + "/" + y + ');">' + i + '</a></td>';
             } else {
-                html += '<td class="normal"><a href="#" onclick="myPopup();">' + i + '</a></td>';
+                html += '<td class="normal"><a href="#" onclick="myPopup(' +  + m + "/" + i + "/" + y + ');">' + i + '</a></td>';
             }
             // If Saturday, closes the row
             if (dow == 6) {
@@ -98,7 +98,7 @@ class Cal {
             else if (i == lastDateOfMonth) {
                 var k = 1;
                 for (dow; dow < 6; dow++) {
-                    html += '<td class="not-current"><a href="#" onclick="myPopup(' + i + ');">' + k + '</a></td>';
+                    html += '<td class="not-current"><a href="#" onclick="myPopup(' + m + "/" + i + "/" + y + ');">' + k + '</a></td>';
                     k++;
                 }
             }
@@ -110,55 +110,67 @@ class Cal {
         document.getElementById(this.divId).innerHTML = html;
     }
 }
-  // On Load of the window
-  window.onload = function () {
+// On Load of the window
+window.onload = function () {
     // Start calendar
     var c = new Cal("divCal");
     c.showcurr();
     // Bind next and previous button clicks
     getId('btnNext').onclick = function () {
-      c.nextMonth();
+        c.nextMonth();
     };
     getId('btnPrev').onclick = function () {
-      c.previousMonth();
+        c.previousMonth();
     };
-  }
-  // Get element by id
-  function getId(id) {
+}
+// Get element by id
+function getId(id) {
     return document.getElementById(id);
-  }
+}
 
-  function myPopup(day) {
-      var popup = document.getElementById("myPopup");
-      document.getElementById("myPopup").style.display = "block";
-      //Nothing to see here... (inserire gli eventi del giorno selezionato\
-      //trovati per richiesta GET e query secondo il parametro 'day', espresso come 'giorno/mese/anno').
-      //console.log("About to send request...");
-      request("elencoEventi", day);
-      popup.classList.toggle("show");
-  }
-
-  var request = async (id, day) => {
+var requestWithParams = async (id, day) => {
     try {
-        const response = await fetch("/api/v1/events", {day: day}); //This should be a GET request with the selected date as a parameter
-        if(response.ok) {
-            const jsonResponse = await response.json();
-            for (var f of jsonResponse.listForCategory) {
-                document.getElementById(id).innerHTML += "<h3>" + f.category + "</h3>\
-                <ul class=\"list-group list-group-flush\"><li class=\"list-group-item\"><div class=\"row row-cols-4\"\
-                id=\"" + f.category + "\">";
-                for (var item of f.events) {
-                    document.getElementById(f.category).innerHTML += "<div class=\"col\"><div class=\"card\">\
-                    <h5 class=\"card-title\">" + item.name + "</h5>\
-                    <a href=\"#?id=" + item.id + "\" class=\"btn btn-primary\" name=\"cardButton\">Maggiori informazioni...</a></div></div>";
-                    //Si ricordi che, nel link associato al bottone di cui sopra, dovrà essere inserito anche l'id dell'evento
-                    //come parametro di query. Questo id dovrà essere cercato, una volta che Enrico avrà creato la sua pagina di
-                    //visualizzazione di un evento pubblico, tramite il campo opportuno contenuto nel file JSON ricevuto dal client.
-                }
-                document.getElementById("eventLists").innerHTML += "</div></li></ul>";
-            }
+        //SOLO PER LO SVILUPPO IN LOCALE (da commentare quando si eseguirà il deploy su Heroku, sostituendola con l'hostname
+        //dell'applicazione su Heroku)
+        var HOST_NAME = 'http://localhost:3000';
+
+        var data = { giorno: day }, url = new URL(HOST_NAME + "/api/v1/events");
+        for (let k in data) {
+            url.searchParams.append(k, data[k]);
         }
-    } catch(error) {
+        fetch(url)
+        .then(response => response.json())
+        .then(response => {
+            console.log(response);
+            var category = response[0].category, firstIteration = true;
+            for (var f of response) {
+                if (category !== f.category || firstIteration) {
+                    category = f.category;
+                    document.getElementById(id).innerHTML += "<h3>" + category + "</h3>\
+                    <ul class=\"list-group list-group-flush\"><li class=\"list-group-item\"><div class=\"row\"\
+                    id=\"" + category + "\">";
+                }
+                var jr1 = response.filter(item => item.category === category);
+
+                //Itero sulla risposta JSON filtrata per categoria, ottenendo i valori dei campi desiderati
+                for (var object of jr1) {
+                    document.getElementById(category).innerHTML += "<div class=\"col\"><div class=\"card\">\
+                    <h5 class=\"card-title\">" + object.name + "</h5>\
+                    <a href=\"" + object.id + "\" class=\"btn btn-primary\" name=\"cardButton\">Maggiori informazioni...</a></div></div>";
+                }
+                document.getElementById(id).innerHTML += "</div></li></ul>";
+            }
+        });
+    } catch (error) {
         console.log(error);
     }
 };
+
+function myPopup(day) {
+    var popup = document.getElementById("myPopup");
+    document.getElementById("myPopup").style.display = "block";
+    //Nothing to see here... (inserire gli eventi del giorno selezionato
+    //trovati per richiesta GET e query secondo il parametro 'day', espresso come 'giorno/mese/anno').
+    requestWithParams("elencoEventi", day); //"day" is undefined. Why?
+    popup.classList.toggle("show");
+}

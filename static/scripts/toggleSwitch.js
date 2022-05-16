@@ -1,24 +1,28 @@
 var request = async () => {
     try {
         const response = await fetch("/api/v1/events");
-        if(response.ok) {
-            const jsonResponse = await response.json();
-            for (var f of jsonResponse.listForCategory) {
-                document.getElementById("eventLists").innerHTML += "<h3>" + f.category + "</h3>\
-                <ul class=\"list-group list-group-flush\"><li class=\"list-group-item\"><div class=\"row row-cols-4\"\
-                id=\"" + f.category + "\">";
-                for (var item of f.events) {
-                    document.getElementById(f.category).innerHTML += "<div class=\"col\"><div class=\"card\">\
-                    <h5 class=\"card-title\">" + item.name + "</h5>\
-                    <a href=\"#?id=" + item.id + "\" class=\"btn btn-primary\" name=\"cardButton\">Maggiori informazioni...</a></div></div>";
-                    //Si ricordi che, nel link associato al bottone di cui sopra, dovrà essere inserito anche l'id dell'evento
-                    //come parametro di query. Questo id dovrà essere cercato, una volta che Enrico avrà creato la sua pagina di
-                    //visualizzazione di un evento pubblico, tramite il campo opportuno contenuto nel file JSON ricevuto dal client.
+        if (response.ok) {
+            var jsonResponse = await response.json();
+            var category = jsonResponse[0].category, firstIteration = true;
+            for (var f of jsonResponse) {
+                if (category !== f.category || firstIteration) {
+                    category = f.category;
+                    document.getElementById("eventLists").innerHTML += "<h3>" + category + "</h3>\
+                    <ul class=\"list-group list-group-flush\"><li class=\"list-group-item\"><div class=\"row row-cols-4\"\
+                    id=\"" + category + "\">";
+                }
+                var jr1 = jsonResponse.filter(item => item.category === category);
+
+                //Itero sulla risposta JSON filtrata per categoria, ottenendo i valori dei campi desiderati
+                for (var object of jr1) {
+                    document.getElementById(category).innerHTML += "<div class=\"col\"><div class=\"card\">\
+                    <h5 class=\"card-title\">" + object.name + "</h5>\
+                    <a href=\"" + object.id + "\" class=\"btn btn-primary\" name=\"cardButton\">Maggiori informazioni...</a></div></div>";
                 }
                 document.getElementById("eventLists").innerHTML += "</div></li></ul>";
             }
         }
-    } catch(error) {
+    } catch (error) {
         console.log(error);
     }
 };

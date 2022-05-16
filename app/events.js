@@ -1,18 +1,22 @@
 const express = require('express');
-const path = require('path');
-const fs = require('fs');
 const eventPublic = require('./collections/eventPublic');
 const router = express.Router();
 
-router.get("", (req, res) => {
-    if(req.query.day != undefined) {
-        let events = eventPublic.find({data: req.query.day});
-        fs.writeFile("./app/events/events.json", () => {
-            console.log("About to write file...");
-            events.map(event => event.name); //Devo definire la funzione map?
-        });
+router.get("", async (req, res) => {
+    var events;
+    if(req.query.giorno != undefined) {
+        events = await eventPublic.find({data: req.query.giorno});
+    } else {
+        events = await eventPublic.find({});
     }
-    res.sendFile(path.resolve("./app/events/events.json"));
+    events = events.map(event => {
+        return {
+            id: '/api/v1/events/' + event._id,
+            name: event.nomeAtt,
+            category: event.categoria
+        }
+    });
+    res.status(200).json(events);
 });
 
 module.exports = router;
