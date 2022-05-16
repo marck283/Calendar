@@ -98,7 +98,7 @@ class Cal {
             else if (i == lastDateOfMonth) {
                 var k = 1;
                 for (dow; dow < 6; dow++) {
-                    html += '<td class="not-current"><a href="#" onclick="myPopup();">' + k + '</a></td>';
+                    html += '<td class="not-current"><a href="#" onclick="myPopup(' + i + ');">' + k + '</a></td>';
                     k++;
                 }
             }
@@ -128,18 +128,19 @@ class Cal {
     return document.getElementById(id);
   }
 
-  function myPopup() {
+  function myPopup(day) {
       var popup = document.getElementById("myPopup");
       document.getElementById("myPopup").style.display = "block";
       //Nothing to see here... (inserire gli eventi del giorno selezionato\
       //trovati per richiesta GET e query secondo il parametro 'day', espresso come 'giorno/mese/anno').
-      request("elencoEventi");
+      //console.log("About to send request...");
+      request("elencoEventi", day);
       popup.classList.toggle("show");
   }
 
-  var request = async (id) => {
+  var request = async (id, day) => {
     try {
-        const response = await fetch("/api/v1/events");
+        const response = await fetch("/api/v1/events", {day: day}); //This should be a GET request with the selected date as a parameter
         if(response.ok) {
             const jsonResponse = await response.json();
             for (var f of jsonResponse.listForCategory) {

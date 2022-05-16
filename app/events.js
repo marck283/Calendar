@@ -8,6 +8,7 @@ router.get("", (req, res) => {
     if(req.query.day != undefined) {
         let events = eventPublic.find({data: req.query.day});
         fs.writeFile("./app/events/events.json", () => {
+            console.log("About to write file...");
             events.map(event => event.name); //Devo definire la funzione map?
         });
     }
