@@ -1,17 +1,12 @@
 const express = require('express');
-const eventPublic = require('./collections/eventPublic');
+const eventPublic = require('../collections/eventPublic');
 const router = express.Router();
 
 router.get("", async (req, res) => {
-    var events;
-    if(req.query.giorno != undefined) {
-        events = await eventPublic.find({data: req.query.giorno});
-    } else {
-        events = await eventPublic.find({});
-    }
+    var events = await eventPublic.find({data: req.query.giorno});
     events = events.map(event => {
         return {
-            id: '/api/v1/events/' + event._id,
+            id: '/api/v1/listaEventi/' + event._id,
             name: event.nomeAtt,
             category: event.categoria
         }

@@ -134,7 +134,7 @@ var requestWithParams = async (id, day) => {
         //dell'applicazione su Heroku)
         var HOST_NAME = 'http://localhost:3000';
 
-        var data = { giorno: day }, url = new URL(HOST_NAME + "/api/v1/events");
+        var data = { giorno: day }, url = new URL(HOST_NAME + "/api/v1/eventiCalendario");
         for (let k in data) {
             url.searchParams.append(k, data[k]);
         }

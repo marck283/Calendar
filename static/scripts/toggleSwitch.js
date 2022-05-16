@@ -1,6 +1,6 @@
 var request = async () => {
     try {
-        const response = await fetch("/api/v1/events");
+        const response = await fetch("/api/v1/listaEventi");
         if (response.ok) {
             var jsonResponse = await response.json();
             var category = jsonResponse[0].category, firstIteration = true;
