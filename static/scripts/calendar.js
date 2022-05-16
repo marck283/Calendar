@@ -130,6 +130,8 @@ class Cal {
 
   function myPopup() {
       var popup = document.getElementById("myPopup");
-      popup.innerHTML = "<a href=\"#\">1</a>";
+      popup.innerHTML = "<br /><div class=\"card\" href=\"#\"><div class=\"card-body\">\
+      <h5 class=\"card-title\">Elenco eventi</h5><div class=\"card-text\">Nothing to see here... (inserire gli eventi del giorno selezionato\
+        trovati per richiesta GET e query secondo il parametro 'day', espresso come 'giorno/mese/anno')</div></div></div>";
       popup.classList.toggle("show");
   }
