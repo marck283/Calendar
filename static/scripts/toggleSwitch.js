@@ -21,7 +21,7 @@ var request = async () => {
     } catch(error) {
         console.log(error);
     }
-}
+};
 
 var showIfChecked = () => {
     if (document.getElementById("buttonSwitch").checked) {
@@ -33,6 +33,7 @@ var showIfChecked = () => {
         request();
         document.getElementById("calendarWrapper").style.display = "none";
         document.getElementById("divCal").style.display = "none";
+        document.getElementById("myPopup").style.display = "none";
         document.getElementById("eventLists").style.display = "block";
     }
 };

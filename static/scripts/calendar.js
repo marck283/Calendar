@@ -130,8 +130,34 @@ class Cal {
 
   function myPopup() {
       var popup = document.getElementById("myPopup");
-      popup.innerHTML = "<br /><div class=\"card\" href=\"#\"><div class=\"card-body\">\
-      <h5 class=\"card-title\">Elenco eventi</h5><div class=\"card-text\">Nothing to see here... (inserire gli eventi del giorno selezionato\
-        trovati per richiesta GET e query secondo il parametro 'day', espresso come 'giorno/mese/anno')</div></div></div>";
+      document.getElementById("myPopup").style.display = "block";
+      //Nothing to see here... (inserire gli eventi del giorno selezionato\
+      //trovati per richiesta GET e query secondo il parametro 'day', espresso come 'giorno/mese/anno').
+      request("elencoEventi");
       popup.classList.toggle("show");
   }
+
+  var request = async (id) => {
+    try {
+        const response = await fetch("/api/v1/events");
+        if(response.ok) {
+            const jsonResponse = await response.json();
+            for (var f of jsonResponse.listForCategory) {
+                document.getElementById(id).innerHTML += "<h3>" + f.category + "</h3>\
+                <ul class=\"list-group list-group-flush\"><li class=\"list-group-item\"><div class=\"row row-cols-4\"\
+                id=\"" + f.category + "\">";
+                for (var item of f.events) {
+                    document.getElementById(f.category).innerHTML += "<div class=\"col\"><div class=\"card\">\
+                    <h5 class=\"card-title\">" + item.name + "</h5>\
+                    <a href=\"#?id=" + item.id + "\" class=\"btn btn-primary\" name=\"cardButton\">Maggiori informazioni...</a></div></div>";
+                    //Si ricordi che, nel link associato al bottone di cui sopra, dovrà essere inserito anche l'id dell'evento
+                    //come parametro di query. Questo id dovrà essere cercato, una volta che Enrico avrà creato la sua pagina di
+                    //visualizzazione di un evento pubblico, tramite il campo opportuno contenuto nel file JSON ricevuto dal client.
+                }
+                document.getElementById("eventLists").innerHTML += "</div></li></ul>";
+            }
+        }
+    } catch(error) {
+        console.log(error);
+    }
+};
