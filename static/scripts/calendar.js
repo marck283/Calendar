@@ -74,7 +74,7 @@ class Cal {
                 html += '<tr>';
                 var k = lastDayOfLastMonth - firstDayOfMonth + 1;
                 for (var j = 0; j < firstDayOfMonth; j++) {
-                    html += "<td class=\"not-current\"><a href=\"#\" onclick=\"myPopup(" + m + "/" + i + "/"+ y + ");\">" + i + '</a></td>';
+                    html += '<td class="not-current"><a href="#" onclick="myPopup(\"' + m + "/" + i + "/"+ y + '\");">' + i + '</a></td>';
                     k++;
                 }
             }
@@ -84,9 +84,11 @@ class Cal {
             var chkM = chk.getMonth();
             var day1 = m + "/" + i + "/"
             if (chkY == this.currYear && chkM == this.currMonth && i == this.currDay) {
-                html += "<td class=\"not-current\"><a href=\"#\" onclick=\"myPopup(" + m + "/" + i + "/"+ y + ");\">" + i + '</a></td>';
+                //Qui c'è qualcosa che non va con i terminatori di stringa... Come fare altrimenti?
+                //Si potrebbe assegnare la chiamata a "myPopup()" separatamente dalla dichiarazione delle seguenti stringhe?
+                html += '<td class="not-current"><a href="#" onclick="myPopup(\"' + m + "/" + i + "/"+ y + '\");">' + i + '</a></td>';
             } else {
-                html += "<td class=\"not-current\"><a href=\"#\" onclick=\"myPopup(" + m + "/" + i + "/"+ y + ");\">" + i + '</a></td>';
+                html += '<td class="not-current"><a href="#" onclick="myPopup(\"' + m + "/" + i + "/"+ y + '\");">' + i + '</a></td>';
             }
             // Chiudi la riga se è sabato
             if (dow == 6) {
@@ -99,7 +101,7 @@ class Cal {
             else if (i == lastDateOfMonth) {
                 var k = 1;
                 for (dow; dow < 6; dow++) {
-                    html += "<td class=\"not-current\"><a href=\"#\" onclick=\"myPopup(" + m + "/" + i + "/"+ y + ");\">" + i + '</a></td>';
+                    html += '<td class="not-current"><a href="#" onclick="myPopup(\"' + m + "/" + i + "/"+ y + '\");">' + i + '</a></td>';
                     k++;
                 }
             }
