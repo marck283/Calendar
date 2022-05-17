@@ -37,7 +37,7 @@ var showIfChecked = () => {
         request();
         document.getElementById("calendarWrapper").style.display = "none";
         document.getElementById("divCal").style.display = "none";
-        document.getElementById("myPopup").style.display = "none";
+        document.getElementById("myPopup1").style.display = "none";
         document.getElementById("eventLists").style.display = "block";
     }
 };

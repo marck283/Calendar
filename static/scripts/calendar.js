@@ -74,7 +74,7 @@ class Cal {
                 html += '<tr>';
                 var k = lastDayOfLastMonth - firstDayOfMonth + 1;
                 for (var j = 0; j < firstDayOfMonth; j++) {
-                    html += '<td class="not-current"><a href="#" onclick="myPopup(\"' + (m - 1) + '/' + k + '/' + y + '\");">' + k + '</a></td>';
+                    html += "<td class=\"not-current\"><a href=\"#\" onclick=\"myPopup(" + m + "/" + i + "/"+ y + ");\">" + i + '</a></td>';
                     k++;
                 }
             }
@@ -82,10 +82,11 @@ class Cal {
             var chk = new Date();
             var chkY = chk.getFullYear();
             var chkM = chk.getMonth();
+            var day1 = m + "/" + i + "/"
             if (chkY == this.currYear && chkM == this.currMonth && i == this.currDay) {
-                html += '<td class="today"><a href="#" onclick="myPopup(\"' + m + '/' + i + '/' + y + '\");">' + i + '</a></td>';
+                html += "<td class=\"not-current\"><a href=\"#\" onclick=\"myPopup(" + m + "/" + i + "/"+ y + ");\">" + i + '</a></td>';
             } else {
-                html += '<td class="normal"><a href="#" onclick="myPopup(\"' + m + '/' + i + '/' + y + '\");">' + i + '</a></td>';
+                html += "<td class=\"not-current\"><a href=\"#\" onclick=\"myPopup(" + m + "/" + i + "/"+ y + ");\">" + i + '</a></td>';
             }
             // Chiudi la riga se è sabato
             if (dow == 6) {
@@ -98,7 +99,7 @@ class Cal {
             else if (i == lastDateOfMonth) {
                 var k = 1;
                 for (dow; dow < 6; dow++) {
-                    html += '<td class="not-current"><a href="#" onclick="myPopup(\"' + (m + 1) + '/' + k + '/' + y + '\");">' + k + '</a></td>';
+                    html += "<td class=\"not-current\"><a href=\"#\" onclick=\"myPopup(" + m + "/" + i + "/"+ y + ");\">" + i + '</a></td>';
                     k++;
                 }
             }
@@ -129,9 +130,12 @@ function getId(id) {
 }
 
 var requestWithParams = async (id, day) => {
-    fetch("/api/v1/eventiCalendario?giorno=" + day)
+    try {
+        fetch("/api/v1/eventiCalendario?giorno=" + day)
         .then(response => {
-            response.json(); console.log(response)})
+            console.log(response);
+            return response.json();
+        })
         .then(response => {
             console.log(response);
             var category = response[0].category, firstIteration = true;
@@ -152,14 +156,16 @@ var requestWithParams = async (id, day) => {
                 }
                 document.getElementById(id).innerHTML += "</div></li></ul>";
             }
-        }).catch(error => console.log(error));
+        });
+    } catch(error) {
+        console.log(error);
+    }
 };
 
-function myPopup(day) {
-    var popup = document.getElementById("myPopup");
-    document.getElementById("myPopup").style.display = "block";
+var myPopup = day => {
+    var popup = document.getElementById("myPopup1");
     //Nothing to see here... (inserire gli eventi del giorno selezionato
-    //trovati per richiesta GET e query secondo il parametro 'day', espresso come 'giorno/mese/anno').
-    requestWithParams("elencoEventi", day); //"day" is undefined. Why?
-    popup.classList.toggle("show");
+    //trovati per richiesta GET e query secondo il parametro 'day', espresso come 'mese/giorno/anno').
+    requestWithParams("elencoEventi", day);
+    popup.style.display = "block";
 }
