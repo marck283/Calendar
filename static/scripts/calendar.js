@@ -88,7 +88,12 @@ class Cal {
             } else {
                 html += '<td class="normal">';
             }
-            html += '<a href="#" id="' + i + '">' + i + '</a></td>';
+            if (i < 10) {
+                html += '<a href="#" id="0' + i + '">' + i + '</a></td>';
+            } else {
+                html += '<a href="#" id="' + i + '">' + i + '</a></td>';
+            }
+
 
             // Se sabato, chiude la riga
             if (dow == 6) {
@@ -113,7 +118,11 @@ class Cal {
         document.getElementById(this.divId).innerHTML = html;
 
         for (var elem of document.getElementsByTagName("a")) {
-            elem.onclick = myPopup.bind(this, [(m + 1).toString(), elem.getAttribute("id"), y.toString()]);
+            if (m < 9) {
+                elem.onclick = myPopup.bind(this, ["0" + (m + 1).toString(), elem.getAttribute("id"), y.toString()]);
+            } else {
+                elem.onclick = myPopup.bind(this, [(m + 1).toString(), elem.getAttribute("id"), y.toString()]);
+            }
         }
     }
 }
@@ -134,33 +143,38 @@ function getId(id) {
 }
 
 var requestWithParams = async (id, day) => {
-    try {
-        fetch("/api/v1/GiorniCalendarioPubblico/" + day.join("-"))
+    fetch("/api/v1/GiorniCalendarioPubblico/" + day.join("-"))
         .then(resp => resp.json())
         .then(resp => {
-            console.log(resp);
-            var category = resp[0].category, firstIteration = true;
-            for (var f of resp) {
-                if (category !== f.category || firstIteration) {
-                    category = f.category;
-                    document.getElementById(id).innerHTML += "<h3>" + category + "</h3>\
+            console.log(resp.status);
+            if (resp.status === 200) {
+                var category = resp[0].category, firstIteration = true;
+                for (var f of resp) {
+                    if (category !== f.category || firstIteration) {
+                        category = f.category;
+                        document.getElementById(id).innerHTML += "<h3>" + category + "</h3>\
                     <ul class=\"list-group list-group-flush\"><li class=\"list-group-item\"><div class=\"row\"\
                     id=\"" + category + "\">";
-                }
-                var jr1 = resp.filter(item => item.category === category);
+                    }
+                    var jr1 = resp.filter(item => item.category === category);
 
-                //Itero sulla risposta JSON filtrata per categoria, ottenendo i valori dei campi desiderati
-                for (var object of jr1) {
-                    document.getElementById(category).innerHTML += "<div class=\"col\"><div class=\"card\">\
+                    //Itero sulla risposta JSON filtrata per categoria, ottenendo i valori dei campi desiderati
+                    for (var object of jr1) {
+                        document.getElementById(category).innerHTML += "<div class=\"col\"><div class=\"card\">\
                     <h5 class=\"card-title\">" + object.name + "</h5>\
                     <a href=\"" + object.id + "\" class=\"btn btn-primary\" name=\"cardButton\">Maggiori informazioni...</a></div></div>";
+                    }
+                    document.getElementById(id).innerHTML += "</div></li></ul>";
                 }
-                document.getElementById(id).innerHTML += "</div></li></ul>";
+            } else {
+                if (resp.status === 404) {
+                    resp.json().then(data => document.getElementById(id).innerHTML = "Errore. Nessun evento disponibile per la data selezionata.")
+                }
             }
+        })
+        .catch(error => {
+            console.log(error);
         });
-    } catch (error) {
-        console.log(error);
-    }
 };
 
 function myPopup(day) {

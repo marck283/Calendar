@@ -14,8 +14,4 @@ app.get("/static", (req, res) => {
     res.status(200).sendFile(path.resolve("./index.html"));
 });
 
-app.get("/styles", (req, res) => {
-    res.status(200).sendFile(path.resolve("/styles/calendar.css"));
-});
-
 module.exports = app;

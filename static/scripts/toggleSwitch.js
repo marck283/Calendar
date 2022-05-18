@@ -1,11 +1,10 @@
 var request = () => {
-    try {
-        fetch("/api/v1/EventiPubblici")
-        .then(resp => resp.json())
-        .then(resp => manipulateDom(resp));
-    } catch (error) {
+    fetch("/api/v1/EventiPubblici/")
+    .then(resp => resp.json())
+    .then(resp => manipulateDom(resp))
+    .catch(error => {
         console.log(error);
-    }
+    });
 };
 
 var showIfChecked = () => {
