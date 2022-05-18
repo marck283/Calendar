@@ -143,10 +143,16 @@ function getId(id) {
 }
 
 var requestWithParams = async (id, day) => {
-    fetch("/api/v1/GiorniCalendarioPubblico/" + day.join("-"))
+    var token = "frgrgtgrt";
+    
+    fetch("/api/v1/GiorniCalendarioPubblico/" + day.join("-"), {
+        method: 'GET',
+        headers: {
+            'x-access-token': token
+        }
+    })
         .then(resp => resp.json())
         .then(resp => {
-            console.log(resp.status);
             if (resp.status === 200) {
                 var category = resp[0].category, firstIteration = true;
                 for (var f of resp) {

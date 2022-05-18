@@ -1,5 +1,12 @@
 var request = () => {
-    fetch("/api/v1/EventiPubblici/")
+    var token = "frgrgtgrt";
+    
+    fetch("/api/v1/EventiPubblici/", {
+        method: 'GET',
+        headers: {
+            'x-access-token': token
+        }
+    })
     .then(resp => resp.json())
     .then(resp => manipulateDom(resp))
     .catch(error => {
