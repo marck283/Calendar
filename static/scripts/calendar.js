@@ -144,42 +144,46 @@ function getId(id) {
 
 var requestWithParams = async (id, day) => {
     var token = "frgrgtgrt";
-    
+
     fetch("/api/v1/GiorniCalendarioPubblico/" + day.join("-"), {
         method: 'GET',
         headers: {
             'x-access-token': token //Invio il token di accesso attraverso un header della richiesta.
         }
-    })
-        .then(resp => resp.json())
-        .then(resp => {
-            if (resp.code === 200) {
-                var category = resp[0].category, firstIteration = true;
-                for (var f of resp) {
-                    if (category !== f.category || firstIteration) {
+    }).then(resp => {
+        if (resp.status == 200) {
+            resp.json().then(resp => {
+                var categories = []; //Lista di categorie già stampate a video
+                var firstIteration = true;
+                for (var f of resp) { //f è il singolo evento
+                    if (categories.find(e => e == f.category) === undefined || firstIteration) {
+                        categories.push(f.category);
+                        firstIteration = false;
                         category = f.category;
                         document.getElementById(id).innerHTML += "<h3>" + category + "</h3>\
                     <ul class=\"list-group list-group-flush\"><li class=\"list-group-item\"><div class=\"row\"\
                     id=\"" + category + "\">";
-                    }
-                    var jr1 = resp.filter(item => item.category === category);
 
-                    //Itero sulla risposta JSON filtrata per categoria, ottenendo i valori dei campi desiderati
-                    for (var object of jr1) {
-                        document.getElementById(category).innerHTML += "<div class=\"col\"><div class=\"card\">\
+                        var jr1 = resp.filter(item => item.category === category);
+
+                        //Itero sulla risposta JSON filtrata per categoria, ottenendo i valori dei campi desiderati
+                        for (var object of jr1) {
+                            document.getElementById(category).innerHTML += "<div class=\"col\"><div class=\"card\">\
                     <h5 class=\"card-title\">" + object.name + "</h5>\
                     <a href=\"" + object.id + "\" class=\"btn btn-primary\" name=\"cardButton\">Maggiori informazioni...</a></div></div>";
+                        }
+                        document.getElementById(id).innerHTML += "</div></li></ul>";
                     }
-                    document.getElementById(id).innerHTML += "</div></li></ul>";
                 }
+            })
+        } else {
+            if (resp.status == 404) {
+                document.getElementById(id).innerHTML = "Errore. Nessun evento disponibile per la data selezionata.";
             } else {
-                if (resp.code === 404) {
-                    document.getElementById(id).innerHTML = "Errore. Nessun evento disponibile per la data selezionata.";
-                } else {
-                    console.log(resp.code);
-                }
+                console.log(resp.status);
             }
-        })
+        }
+    })
         .catch(error => console.log(error));
 };
 
