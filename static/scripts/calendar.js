@@ -184,7 +184,7 @@ var requestWithParams = async (id, day) => {
 
             case 404: {
                 //Se non esiste alcun evento per la data selezionata
-                getId(id).textContent = "Nessun evento disponibile per la data selezionata.";
+                resp.json().then(resp => getId(id).textContent = resp.error);
                 break;
             }
 

@@ -8,14 +8,12 @@ var request = () => {
     .then(resp => {
         switch(resp.status) {
             case 200: {
-                resp.json().then(resp => {
-                    manipulateDom(resp);
-                })
+                resp.json().then(resp => manipulateDom(resp))
                 break;
             }
 
             case 404: {
-                document.getElementById("eventLists").textContent = "Errore. Non sono presenti eventi organizzati.";
+                resp.json().then(resp => document.getElementById("eventLists").textContent = resp.error);
                 break;
             }
 
