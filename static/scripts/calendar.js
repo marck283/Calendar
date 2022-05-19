@@ -136,6 +136,7 @@ window.onload = function () {
     getId('btnPrev').onclick = function () {
         c.previousMonth();
     };
+    getId("myPopup1").style.display = "none";
 }
 
 function getId(id) {
@@ -143,7 +144,8 @@ function getId(id) {
 }
 
 var requestWithParams = async (id, day) => {
-    var token = "frgrgtgrt";
+    getId(id).innerHTML = "";
+    getId(id).style.display = "block";
 
     fetch("/api/v1/GiorniCalendarioPubblico/" + day.join("-"), {
         method: 'GET',
@@ -151,45 +153,59 @@ var requestWithParams = async (id, day) => {
             'x-access-token': token //Invio il token di accesso attraverso un header della richiesta.
         }
     }).then(resp => {
-        if (resp.status == 200) {
-            resp.json().then(resp => {
-                var categories = []; //Lista di categorie già stampate a video
-                var firstIteration = true;
-                for (var f of resp) { //f è il singolo evento
-                    if (categories.find(e => e == f.category) === undefined || firstIteration) {
-                        categories.push(f.category);
-                        firstIteration = false;
-                        category = f.category;
-                        document.getElementById(id).innerHTML += "<h3>" + category + "</h3>\
-                    <ul class=\"list-group list-group-flush\"><li class=\"list-group-item\"><div class=\"row\"\
-                    id=\"" + category + "\">";
-
-                        var jr1 = resp.filter(item => item.category === category);
-
-                        //Itero sulla risposta JSON filtrata per categoria, ottenendo i valori dei campi desiderati
-                        for (var object of jr1) {
-                            document.getElementById(category).innerHTML += "<div class=\"col\"><div class=\"card\">\
-                    <h5 class=\"card-title\">" + object.name + "</h5>\
-                    <a href=\"" + object.id + "\" class=\"btn btn-primary\" name=\"cardButton\">Maggiori informazioni...</a></div></div>";
+        switch(resp.status) {
+            case 200: {
+                resp.json().then(resp => {
+                    var categories = []; //Lista di categorie già stampate a video
+                    for (var f of resp.eventi) { //f è il singolo evento
+                        if (categories.find(e => e == f.category) === undefined) {
+                            //Se non trovo la categoria dell'evento considerato all'interno dell'array delle categorie
+                            //già stampate a video, la inserisco e stampo tutti gli eventi ad essa appartenenti tale categoria.
+                            categories.push(f.category);
+                            category = f.category;
+                            getId(id).innerHTML += "<h3>" + category + "</h3>\
+                        <ul class=\"list-group list-group-flush\"><li class=\"list-group-item\"><div class=\"row\"\
+                        id=\"" + category + "\">";
+    
+                            var jr1 = resp.eventi.filter(item => item.category === category);
+    
+                            //Itero sulla risposta JSON filtrata per categoria, ottenendo i valori dei campi desiderati
+                            for (var object of jr1) {
+                                getId(category).innerHTML += "<div class=\"col\"><div class=\"card\">\
+                        <h5 class=\"card-title\">" + object.name + "</h5>\
+                        <a href=\"" + object.id + "\" class=\"btn btn-primary\" name=\"cardButton\">Maggiori informazioni...</a></div></div>";
+                            }
+                            getId(id).innerHTML += "</div></li></ul>";
                         }
-                        document.getElementById(id).innerHTML += "</div></li></ul>";
                     }
-                }
-            })
-        } else {
-            if (resp.status == 404) {
-                document.getElementById(id).innerHTML = "Errore. Nessun evento disponibile per la data selezionata.";
-            } else {
-                console.log(resp.status);
+                })
+                break;
+            }
+
+            case 401: {
+                //Se l'utente non è autenticato
+                getId(id).innerHTML = "Errore. Non è possibile accedere alla risorsa richiesta perché l'utente non è autenticato.";
+                break;
+            }
+
+            case 404: {
+                //Se non esiste alcun evento per la data selezionata
+                getId(id).innerHTML = "Errore. Nessun evento disponibile per la data selezionata.";
+                break;
+            }
+
+            default: {
+                //Per mostrare altri errori nella Developer Console del browser
+                log(resp.status);
             }
         }
-    })
-        .catch(error => console.log(error));
+    }).catch(error => console.log(error));
 };
 
 function myPopup(day) {
     var popup = document.getElementById("myPopup1");
     document.getElementById("myPopup1").style.display = "block";
+
     //Niente da vedere qui... (inserire gli eventi del giorno selezionato
     //trovati per richiesta GET e query secondo il parametro 'day', espresso come 'giorno/mese/anno').
     requestWithParams("elencoEventi", day);

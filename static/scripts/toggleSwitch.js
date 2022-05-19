@@ -1,6 +1,4 @@
-var request = () => {
-    var token = "frgrgtgrt";
-    
+var request = () => {    
     fetch("/api/v1/EventiPubblici/", {
         method: 'GET',
         headers: {
@@ -30,12 +28,10 @@ var showIfChecked = () => {
 };
 
 var manipulateDom = (response, id = "eventLists") => {
-    var firstIteration = true;
     var categories = [];
     for (var f of response) {
-        if (categories.find(e => e === f.category) === undefined || firstIteration) {
+        if (categories.find(e => e === f.category) === undefined) {
             categories.push(f.category);
-            firstIteration = false;
             category = f.category;
             var h3 = document.createElement("h3");
             h3.textContent = category;
