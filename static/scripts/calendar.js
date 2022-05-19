@@ -182,21 +182,15 @@ var requestWithParams = async (id, day) => {
                 break;
             }
 
-            case 401: {
-                //Se l'utente non è autenticato
-                getId(id).innerHTML = "Errore. Non è possibile accedere alla risorsa richiesta perché l'utente non è autenticato.";
-                break;
-            }
-
             case 404: {
                 //Se non esiste alcun evento per la data selezionata
-                getId(id).innerHTML = "Errore. Nessun evento disponibile per la data selezionata.";
+                getId(id).textContent = "Nessun evento disponibile per la data selezionata.";
                 break;
             }
 
             default: {
                 //Per mostrare altri errori nella Developer Console del browser
-                log(resp.status);
+                console.log(resp.status);
             }
         }
     }).catch(error => console.log(error));

@@ -12,8 +12,7 @@ router.get("/:data", async (req, res) => {
     if(token != "") {
         //Eseguire la funzione verify, poi cercare gli eventi nel database
         events = await eventPublic.find({data: str}); //Se il token non è una stringa vuota, richiedi gli eventi per la data selezionata.
-        events = events.filter(e => e.partecipantiID.find(e => e == "6284b7742a0699866a636979") == undefined);
-        console.log(events);
+        events = events.filter(e => e.partecipantiID.find(e => e == "6284b7742a0699866a636979") == undefined); //Cambiare l'id del partecipante al momento del merge con il modulo di autenticazione.
     } else {
         events = await eventPublic.find({});
     }

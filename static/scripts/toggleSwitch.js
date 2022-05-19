@@ -5,11 +5,25 @@ var request = () => {
             'x-access-token': token
         }
     })
-    .then(resp => resp.json())
-    .then(resp => manipulateDom(resp))
-    .catch(error => {
-        console.log(error);
-    });
+    .then(resp => {
+        switch(resp.status) {
+            case 200: {
+                resp.json().then(resp => {
+                    manipulateDom(resp);
+                })
+                break;
+            }
+
+            case 404: {
+                document.getElementById("eventLists").textContent = "Errore. Non sono presenti eventi organizzati.";
+                break;
+            }
+
+            default: {
+                console.log(resp.status);
+            }
+        }
+    }).catch(error => console.log(error));
 };
 
 var showIfChecked = () => {
@@ -30,7 +44,7 @@ var showIfChecked = () => {
 var manipulateDom = (response, id = "eventLists") => {
     var categories = [];
     for (var f of response) {
-        if (categories.find(e => e === f.category) === undefined) {
+        if (categories.find(e => e === f.category) == undefined) {
             categories.push(f.category);
             category = f.category;
             var h3 = document.createElement("h3");
