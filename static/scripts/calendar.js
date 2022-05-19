@@ -148,12 +148,12 @@ var requestWithParams = async (id, day) => {
     fetch("/api/v1/GiorniCalendarioPubblico/" + day.join("-"), {
         method: 'GET',
         headers: {
-            'x-access-token': token
+            'x-access-token': token //Invio il token di accesso attraverso un header della richiesta.
         }
     })
         .then(resp => resp.json())
         .then(resp => {
-            if (resp.status === 200) {
+            if (resp.code === 200) {
                 var category = resp[0].category, firstIteration = true;
                 for (var f of resp) {
                     if (category !== f.category || firstIteration) {
@@ -173,14 +173,14 @@ var requestWithParams = async (id, day) => {
                     document.getElementById(id).innerHTML += "</div></li></ul>";
                 }
             } else {
-                if (resp.status === 404) {
-                    resp.json().then(data => document.getElementById(id).innerHTML = "Errore. Nessun evento disponibile per la data selezionata.")
+                if (resp.code === 404) {
+                    document.getElementById(id).innerHTML = "Errore. Nessun evento disponibile per la data selezionata.";
+                } else {
+                    console.log(resp.code);
                 }
             }
         })
-        .catch(error => {
-            console.log(error);
-        });
+        .catch(error => console.log(error));
 };
 
 function myPopup(day) {

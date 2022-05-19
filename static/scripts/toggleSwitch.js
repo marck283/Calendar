@@ -30,9 +30,11 @@ var showIfChecked = () => {
 };
 
 var manipulateDom = (response, id = "eventLists") => {
-    var category = response[0].category, firstIteration = true;
+    var firstIteration = true;
+    var categories = [];
     for (var f of response) {
-        if (category !== f.category || firstIteration) {
+        if (categories.find(e => e === f.category) === undefined || firstIteration) {
+            categories.push(f.category);
             firstIteration = false;
             category = f.category;
             var h3 = document.createElement("h3");
