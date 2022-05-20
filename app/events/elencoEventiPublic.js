@@ -5,18 +5,16 @@ const eventsMap = require('./eventsMap.js');
 var jwt = require('jsonwebtoken');
 
 router.get("/:data", async (req, res) => {
-    var str = req.params.data.split("-").join("/"); //Il parametro "data" deve essere parte dell'URI sopra indicato se si vuole accedere a questa proprietà.
+    var str = req.params.data.split("-").join("/"); //Il parametro "data" deve essere parte dell'URI sopra indicato se si vuole accedere a questa proprietà.    
     var events;
     var obj = {}, token = req.header("x-access-token");
 
     var user = "6284b7742a0699866a636979"; //Utente di prova
 
+    events = await eventPublic.find({});
     if(token != "") {
         //Eseguire la funzione verify, poi cercare gli eventi nel database
-        events = await eventPublic.find({}); //Se il token non è una stringa vuota, richiedi tutti gli eventi pubblici.
         events = events.filter(e => e.partecipantiID.find(e => e == user) == undefined && e.data.includes(str)); //Cambiare l'id del partecipante al momento del merge con il modulo di autenticazione.
-    } else {
-        events = await eventPublic.find({});
     }
 
     if(events.length > 0) {
